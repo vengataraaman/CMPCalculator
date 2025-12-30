@@ -13,12 +13,7 @@ class CalculatorViewModel constructor(
     var _calcState = MutableStateFlow(CalcState())
     val calcState = _calcState.asStateFlow()
 
-
     sealed class CalcEvents {
-//        object Clear : CalcEvents()
-//        object Delete : CalcEvents()
-//        object Decimal : CalcEvents()
-//        object Calculate : CalcEvents()
         data class OnUpdateDisplayString(val data: String) : CalcEvents()
         data class OnOperationClick(val operation: String) : CalcEvents()
         data class OnNumberClick(val number: Int) : CalcEvents()
@@ -30,7 +25,8 @@ class CalculatorViewModel constructor(
 
                 when (event.operation) {
                     "C" -> clearDisplay()
-                    "=" -> evaluateExpression()
+                    "=" -> onEqualPressed()
+                    "BackSpace" -> onBackSpacePressed()
                     else -> {
                         _calcState.update { it.copy(display = calcState.value.display + event.operation) }
                     }
@@ -38,7 +34,8 @@ class CalculatorViewModel constructor(
             }
 
             is CalcEvents.OnNumberClick -> {
-                _calcState.update { it.copy(display = calcState.value.display + event.number) }
+                //_calcState.update { it.copy(display = calcState.value.display + event.number) }
+                handleExpressionInput(calcState.value.display + event.number)
             }
 
             is CalcEvents.OnUpdateDisplayString -> {
@@ -55,18 +52,37 @@ class CalculatorViewModel constructor(
                  */
                 val mathRegex = Regex("[\\d+\\-*/().\\s]*")
                 if (event.data.matches(mathRegex)) {
-                    _calcState.update { it.copy(display = event.data) }
-                } else if(event.data.last() == '=') {
-                    evaluateExpression()
+                    handleExpressionInput(event.data)
+                } else if (event.data.last() == '=') {
+                    onEqualPressed()
                 }
             }
         }
     }
 
-    fun evaluateExpression() {
+    fun handleExpressionInput(data: String) {
+        /**
+         * Say if
+         *  9* then don't execute evaluation
+         *  9*9 then execute evaluation
+         *  9 then don't execute evaluation as there is no operation
+         */
+        if (data.isNotEmpty() && data.last().isDigit() && data.any { !it.isDigit() }) {
+            val result = evaluator.evaluate(data)
+            _calcState.update { it.copy(display = data, currentValue = result) }
+        } else {
+            _calcState.update { it.copy(display = data) }
+        }
+    }
+
+    fun onBackSpacePressed() {
+        _calcState.update { it.copy(display = calcState.value.display.dropLast(1)) }
+    }
+
+    fun onEqualPressed() {
         val result = evaluator.evaluate(calcState.value.display)
         val formatWithoutTrailingZeros = result.toString().replace("\\.0+$".toRegex(), "")
-        _calcState.update { it.copy(display = formatWithoutTrailingZeros, currentValue = result) }
+        _calcState.update { it.copy(display = formatWithoutTrailingZeros, currentValue = 0.0) }
     }
 
     fun clearDisplay() {

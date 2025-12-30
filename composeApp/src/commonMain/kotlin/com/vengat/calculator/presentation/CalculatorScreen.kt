@@ -25,8 +25,10 @@ import androidx.compose.ui.unit.times
 import com.vengat.calculator.core.StandardMathExpressionEvaluator
 import com.vengat.calculator.presentation.CalculatorViewModel.CalcEvents
 import com.vengat.calculator.presentation.designsystem.CalcButton
-import com.vengat.calculator.presentation.designsystem.CalcTextField
+import com.vengat.calculator.presentation.designsystem.CalcCurrentValueTextField
+import com.vengat.calculator.presentation.designsystem.CalcDisplayTextField
 import com.vengat.calculator.util.CalcBgGradient
+import com.vengat.calculator.util.trimValue
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -69,9 +71,14 @@ fun CalculatorResult(
         verticalArrangement = Arrangement.Center,
         modifier = modifier.fillMaxSize(),
     ) {
-        CalcTextField(
+        CalcDisplayTextField(
             text = calcState.display,
             onValueChange = { onEvent(CalcEvents.OnUpdateDisplayString(it)) },
+            modifier = Modifier.fillMaxWidth()
+        )
+        CalcCurrentValueTextField(
+            text = calcState.currentValue.toString().trimValue(),
+            onValueChange = { },
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -89,17 +96,29 @@ fun CalculatorNumPad(
     ) {
         var widthOfEachElement by remember { mutableStateOf(56.dp) }
         var heightOfEachElement by remember { mutableStateOf(56.dp) }
+
+        val defaultPadding = 4.dp
+        val keypadRows = 6
+        val keypadColumns = 4
         BoxWithConstraints {
             // this 4.dp is needed for the end passing as we add only start and bottom padding for buttons
-            widthOfEachElement = (maxWidth - (1 * 4.dp)) / 4
-            heightOfEachElement = (maxHeight - (1 * 4.dp)) / 5
+            widthOfEachElement = (maxWidth - (1 * defaultPadding)) / keypadColumns
+            heightOfEachElement = (maxHeight - (1 * defaultPadding)) / keypadRows
         }
 
         val buttonModifier = Modifier
             .height(heightOfEachElement)
             .width(widthOfEachElement)
             //.height(56.dp).width(56.dp)
-            .padding(start = 4.dp, bottom = 4.dp)
+            .padding(start = defaultPadding, bottom = defaultPadding)
+
+        Row(
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            OperationsButton(Operations.BACK_SPACE, onEvent, buttonModifier.padding(end = defaultPadding))
+        }
 
         Row(
             horizontalArrangement = Arrangement.Start,

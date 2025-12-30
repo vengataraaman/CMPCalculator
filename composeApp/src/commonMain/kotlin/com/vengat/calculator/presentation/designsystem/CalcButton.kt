@@ -45,16 +45,16 @@ fun CalcButton(
         onClick = onClick,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = Color(0xFF3B5BE0), //MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.surface,
             disabledContainerColor = Color.Unspecified,
             disabledContentColor = Color.Unspecified,
         ),
         contentPadding = contentPadding,
-        shape = RoundedCornerShape(10.dp),
+        shape = RoundedCornerShape(20.dp),
         content = content,
         elevation = ButtonDefaults.buttonElevation(
-            defaultElevation = 10.dp,
+            defaultElevation = 20.dp,
             pressedElevation = 4.dp,
             disabledElevation = 0.dp
         )

@@ -27,5 +27,6 @@ enum class Operations(val operation: String, val symbol: String) {
     PLUS_MINUS_SIGN("+/-", "±"),
     DOT(".", "."),
     PERCENT("%", "%"),
-    CLEAR("C", "C")
+    CLEAR("C", "C"),
+    BACK_SPACE("BackSpace", "⌫")
 }
