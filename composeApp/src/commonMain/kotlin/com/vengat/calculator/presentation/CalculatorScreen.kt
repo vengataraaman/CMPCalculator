@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.vengat.calculator.core.StandardMathExpressionEvaluator
 import com.vengat.calculator.presentation.CalculatorViewModel.CalcEvents
 import com.vengat.calculator.presentation.designsystem.CalcButton
 import com.vengat.calculator.presentation.designsystem.CalcTextField
@@ -181,6 +182,6 @@ fun OperationsButton(
 fun LoginScreenPreview() {
     MaterialTheme {
         //CalculatorNumPad()
-        CalculatorScreen(CalculatorViewModel())
+        CalculatorScreen(CalculatorViewModel(StandardMathExpressionEvaluator()))
     }
 }

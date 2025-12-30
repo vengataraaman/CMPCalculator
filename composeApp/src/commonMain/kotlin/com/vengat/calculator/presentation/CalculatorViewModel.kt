@@ -1,12 +1,13 @@
 package com.vengat.calculator.presentation
 
 import androidx.lifecycle.ViewModel
+import com.vengat.calculator.core.ExpressionEvaluator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class CalculatorViewModel constructor(
-
+    val evaluator: ExpressionEvaluator
 ) : ViewModel() {
 
     var _calcState = MutableStateFlow(CalcState())
@@ -29,6 +30,7 @@ class CalculatorViewModel constructor(
 
                 when (event.operation) {
                     "C" -> clearDisplay()
+                    "=" -> evaluateExpression()
                     else -> {
                         _calcState.update { it.copy(display = calcState.value.display + event.operation) }
                     }
@@ -54,9 +56,17 @@ class CalculatorViewModel constructor(
                 val mathRegex = Regex("[\\d+\\-*/().\\s]*")
                 if (event.data.matches(mathRegex)) {
                     _calcState.update { it.copy(display = event.data) }
+                } else if(event.data.last() == '=') {
+                    evaluateExpression()
                 }
             }
         }
+    }
+
+    fun evaluateExpression() {
+        val result = evaluator.evaluate(calcState.value.display)
+        val formatWithoutTrailingZeros = result.toString().replace("\\.0+$".toRegex(), "")
+        _calcState.update { it.copy(display = formatWithoutTrailingZeros, currentValue = result) }
     }
 
     fun clearDisplay() {
