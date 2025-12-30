@@ -46,9 +46,9 @@ class StandardMathExpressionEvaluator : ExpressionEvaluator {
                 token == "(" -> operators.add(token)
                 token == ")" -> {
                     while (operators.isNotEmpty() && operators.last() != "(") {
-                        applyOperator(output, operators.removeLast())
+                        applyOperator(output, operators.removeAt(operators.size - 1) /* Safe way to remove last element */)
                     }
-                    if (operators.isNotEmpty()) operators.removeLast() // Remove '('
+                    if (operators.isNotEmpty()) operators.removeAt(operators.size - 1) /* Safe way to remove last element */ // Remove '('
                 }
 
                 token in "+-*/^%" -> {
@@ -56,7 +56,7 @@ class StandardMathExpressionEvaluator : ExpressionEvaluator {
                         precedence(operators.last()) >= precedence(token) &&
                         operators.last() != "("
                     ) {
-                        applyOperator(output, operators.removeLast())
+                        applyOperator(output, operators.removeAt(operators.size - 1) /* Safe way to remove last element */)
                     }
                     operators.add(token)
                 }
@@ -64,7 +64,7 @@ class StandardMathExpressionEvaluator : ExpressionEvaluator {
         }
 
         while (operators.isNotEmpty()) {
-            applyOperator(output, operators.removeLast())
+            applyOperator(output, operators.removeAt(operators.size - 1) /* Safe way to remove last element */)
         }
 
         return output.firstOrNull() ?: 0.0
@@ -80,8 +80,8 @@ class StandardMathExpressionEvaluator : ExpressionEvaluator {
     private fun applyOperator(output: MutableList<Double>, op: String) {
         if (output.size < 2) return
 
-        val b = output.removeLast()
-        val a = output.removeLast()
+        val b = output.removeAt(output.size - 1) /* Safe way to remove last element */ // output.removeLast()
+        val a =  output.removeAt(output.size - 1) /* Safe way to remove last element */ //output.removeLast()
 
         val result = when (op) {
             "+" -> a + b
