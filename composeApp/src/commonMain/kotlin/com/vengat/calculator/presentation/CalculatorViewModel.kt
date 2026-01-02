@@ -24,9 +24,10 @@ class CalculatorViewModel constructor(
             is CalcEvents.OnOperationClick -> {
 
                 when (event.operation) {
-                    "C" -> clearDisplay()
-                    "=" -> onEqualPressed()
-                    "BackSpace" -> onBackSpacePressed()
+                    Operations.CLEAR.operation -> clearDisplay()
+                    Operations.EQUAL.operation -> onEqualPressed()
+                    Operations.BACK_SPACE.operation -> onBackSpacePressed()
+                    Operations.BRACES.operation -> onBracesPressed()
                     else -> {
                         _calcState.update { it.copy(display = calcState.value.display + event.operation) }
                     }
@@ -50,13 +51,40 @@ class CalculatorViewModel constructor(
                  * .	Literal dot . (decimal point)
                  * \s	Any whitespace (space, tab, etc.)
                  */
-                val mathRegex = Regex("[\\d+\\-*/().\\s]*")
+                val mathRegex = Regex("[\\d+\\-*/().%\\s]*")
                 if (event.data.matches(mathRegex)) {
                     handleExpressionInput(event.data)
                 } else if (event.data.last() == '=') {
                     onEqualPressed()
                 }
             }
+        }
+    }
+
+    fun onBracesPressed() {
+        /**
+         * Rule used by most calculators
+         * Insert ( if:
+         *     No open bracket exists yet, OR
+         *     Last character is an operator + - × / (
+         * Insert ) if:
+         *     There is an unmatched ( already
+         */
+        if (calcState.value.display.isEmpty()) {
+            _calcState.update { it.copy(display = calcState.value.display + "(") }
+            return
+        }
+
+        val openCount = calcState.value.display.count { it == '(' }
+        val closeCount = calcState.value.display.count { it == ')' }
+
+        val lastChar = calcState.value.display.last()
+        val operators = setOf('+', '-', '×', '*', '/', '(')
+
+        if (openCount == closeCount || operators.contains(lastChar)) {
+            _calcState.update { it.copy(display = calcState.value.display + "(") }
+        } else {
+            _calcState.update { it.copy(display = calcState.value.display + ")") }
         }
     }
 

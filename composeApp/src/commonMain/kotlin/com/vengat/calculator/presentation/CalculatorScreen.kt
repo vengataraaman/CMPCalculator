@@ -126,7 +126,7 @@ fun CalculatorNumPad(
             modifier = Modifier.fillMaxWidth()
         ) {
             OperationsButton(Operations.CLEAR, onEvent, buttonModifier)
-            OperationsButton(Operations.PLUS_MINUS_SIGN, onEvent, buttonModifier)
+            OperationsButton(Operations.BRACES, onEvent, buttonModifier)
             OperationsButton(Operations.PERCENT, onEvent, buttonModifier)
             OperationsButton(Operations.DIVIDE, onEvent, buttonModifier)
         }
@@ -165,8 +165,8 @@ fun CalculatorNumPad(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            NumberButton(Numbers.ZERO, onEvent, buttonModifier)
             OperationsButton(Operations.DOT, onEvent, buttonModifier)
+            NumberButton(Numbers.ZERO, onEvent, buttonModifier)
             // modifier is immutable , once the property is set we cannot modify it
             OperationsButton(
                 Operations.EQUAL, onEvent,

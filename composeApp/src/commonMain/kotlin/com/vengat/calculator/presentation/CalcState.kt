@@ -28,5 +28,6 @@ enum class Operations(val operation: String, val symbol: String) {
     DOT(".", "."),
     PERCENT("%", "%"),
     CLEAR("C", "C"),
+    BRACES("()", "()"),
     BACK_SPACE("BackSpace", "⌫")
 }
