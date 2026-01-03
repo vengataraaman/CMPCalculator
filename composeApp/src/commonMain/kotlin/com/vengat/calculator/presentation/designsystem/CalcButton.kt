@@ -144,22 +144,27 @@ fun getButtonColor(text: String, isPressed: Boolean): Brush {
             || text == Operations.DIVIDE.symbol
         ) {
             Brush.verticalGradient(
-                colors = listOf(
-                    Color(0xFFFFF1D6), // highlight
-                    Color(0xFFFFA500), // main orange
-                    Color(0xFFFF6F00)  // shadow
-                )
+                colors = if (isPressed)
+                    listOf(
+                        Color(0xFFFF6F00),  // shadow
+                        Color(0xFFFFA500), // main orange
+                        Color(0xFFFFF1D6) // highlight
+                    )
+                else
+                    listOf(
+                        Color(0xFFFFF1D6), // highlight
+                        Color(0xFFFFA500), // main orange
+                        Color(0xFFFF6F00)  // shadow
+                    )
             )
         } else if (text == Operations.BACK_SPACE.symbol) {
             SolidColor(Color.Transparent)
         } else if (text == Operations.CLEAR.symbol || text == Operations.BRACES.symbol || text == Operations.PERCENT.symbol) {
             Brush.verticalGradient(
-                colors = listOf(
-                    Color(0xFFB9F6CA), // soft mint
-                    Color(0xFF4CAF50), // main glossy green
-                    Color(0xFF2ECC71), // rich vibrant
-                    Color(0xFF1B5E20), // deep shadow
-                )
+                colors = if (isPressed)
+                    listOf(Color(0xFF9C27B0), Color(0xFFD1A1FF), Color(0xFFC9B3FF))
+                else
+                    listOf(Color(0xFFC9B3FF), Color(0xFFD1A1FF), Color(0xFF9C27B0))
             )
         } else if (Operations.entries.find { it.symbol == text } != null) {
             // for all symbols

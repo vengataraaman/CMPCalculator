@@ -20,6 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.vengat.calculator.core.StandardMathExpressionEvaluator
@@ -50,12 +53,12 @@ fun CalculatorScreen(
             CalculatorResult(
                 calcState.value,
                 viewModel::onEvent,
-                modifier = Modifier.padding(innerPadding).weight(2f)
+                modifier = Modifier.padding(innerPadding).weight(1.5f)
             )
             CalculatorNumPad(
                 calcState.value,
                 viewModel::onEvent,
-                modifier = Modifier.padding(innerPadding).weight(3f)
+                modifier = Modifier.padding(innerPadding).weight(4f)
             )
         }
     }
@@ -101,7 +104,7 @@ fun CalculatorNumPad(
         val keypadRows = 6
         val keypadColumns = 4
         BoxWithConstraints {
-            // this 4.dp is needed for the end passing as we add only start and bottom padding for buttons
+            // need to subtract the padding from w and h for adjusting the end padding
             widthOfEachElement = (maxWidth - (1 * defaultPadding)) / keypadColumns
             heightOfEachElement = (maxHeight - (1 * defaultPadding)) / keypadRows
         }
@@ -114,10 +117,21 @@ fun CalculatorNumPad(
 
         Row(
             horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            verticalAlignment = Alignment.Bottom,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 2 * defaultPadding)
+                .drawWithContent {
+                    drawContent()
+                    drawLine(
+                        color = Color.Gray,
+                        start = Offset(0f, size.height),
+                        end = Offset(size.width, size.height),
+                        strokeWidth = 1.0f,
+                    )
+                }
         ) {
-            OperationsButton(Operations.BACK_SPACE, onEvent, buttonModifier.padding(end = defaultPadding))
+            OperationsButton(Operations.BACK_SPACE, onEvent, buttonModifier.padding(horizontal = defaultPadding))
         }
 
         Row(

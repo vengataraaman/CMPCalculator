@@ -23,7 +23,9 @@ fun CalcCurrentValueTextField(
         readOnly = true,
         textStyle = MaterialTheme.typography.titleLarge.copy(
             textAlign = TextAlign.End,
-        )
+        ),
+        minLines = 1,
+        maxLines = 1
     )
 }
 
@@ -37,6 +39,10 @@ fun CalcDisplayTextField(
         text = text,
         onValueChange = onValueChange,
         modifier = modifier,
+        textStyle = MaterialTheme.typography.headlineLarge.copy(
+            textAlign = TextAlign.End,
+            fontWeight = FontWeight.Bold,
+        )
     )
 }
 
@@ -49,7 +55,9 @@ fun CalcTextField(
     textStyle: TextStyle = MaterialTheme.typography.titleLarge.copy(
         textAlign = TextAlign.End,
         fontWeight = FontWeight.Bold,
-    )
+    ),
+    minLines: Int = 3,
+    maxLines: Int = 3,
 ) {
     TextField(
         value = text,
@@ -57,8 +65,8 @@ fun CalcTextField(
         modifier = modifier,
         //singleLine = true,
         readOnly = readOnly,
-        minLines = 3,
-        maxLines = 3,
+        minLines = minLines,
+        maxLines = maxLines,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
