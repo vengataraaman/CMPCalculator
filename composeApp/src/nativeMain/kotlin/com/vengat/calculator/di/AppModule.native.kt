@@ -1,4 +1,8 @@
 package com.vengat.calculator.di
 
-actual val platformModule: org.koin.core.module.Module
-    get() = TODO("Not yet implemented")
+import org.koin.core.module.Module
+import org.koin.dsl.module
+
+actual val platformModule: Module = module {
+
+}
